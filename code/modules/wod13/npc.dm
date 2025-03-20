@@ -83,7 +83,7 @@
 				break
 	if(!my_weapon && my_weapon_type)
 		my_weapon = new my_weapon_type(src)
-		
+
 
 
 	if(my_weapon)
@@ -119,7 +119,7 @@
 /mob/living/carbon/human/npc/doUnEquip(obj/item/I, force, newloc, no_move, invdrop = TRUE, silent = FALSE)
 	if(I && HAS_TRAIT(I, TRAIT_NODROP))
 		return FALSE
-	. = ..() 
+	. = ..()
 //============================================================
 
 
@@ -513,15 +513,6 @@
 			NPC.Annoy(src)
 
 /mob/living/carbon/Move(NewLoc, direct)
-	if(obfuscate_level < 2)
-		if(alpha < 200)
-			playsound(loc, 'code/modules/wod13/sounds/obfuscate_deactivate.ogg', 50, FALSE)
-			alpha = 255
-	if(m_intent != MOVE_INTENT_WALK)
-		if(obfuscate_level < 3)
-			if(alpha < 200)
-				playsound(loc, 'code/modules/wod13/sounds/obfuscate_deactivate.ogg', 50, FALSE)
-				alpha = 255
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
 		H.update_shadow()
@@ -535,17 +526,10 @@
 		if(get_dist(src, CPN.walktarget) <= getaway)
 			walk(src,0)
 			CPN.walktarget = null
-//		for(var/obj/effect/decal/cleanable/blood/B in NewLoc)
-//			if(B)
-//				if(B.bloodiness)
-//					walk(src,0)
-//					CPN.walktarget = null
-//					if(!CPN.CheckMove())
-//						step_away(CPN, B)
 	if(HAS_TRAIT(src, TRAIT_RUBICON))
 		if(istype(NewLoc, /turf/open/floor/plating/shit))
 			return
-	..()
+	. = ..()
 
 
 /mob/living/carbon/human/toggle_resting()

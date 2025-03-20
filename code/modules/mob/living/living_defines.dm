@@ -236,8 +236,6 @@
 	var/wait_for_music = 30
 	var/wasforced
 
-	var/spell_immunity = FALSE
-
 	var/isfishing = FALSE
 
 	var/mob/parrying = null
@@ -245,10 +243,8 @@
 	var/parry_cd = 0
 	var/blocking = FALSE
 	var/last_m_intent = MOVE_INTENT_RUN
-	var/last_bloodheal_use = 0
 	var/last_bloodpower_use = 0
 	var/last_drinkblood_use = 0
-	var/last_bloodheal_click = 0
 	var/last_bloodpower_click = 0
 	var/last_drinkblood_click = 0
 	var/harm_focus = SOUTH
@@ -290,3 +286,6 @@
 	var/max_demon_chi = 0
 	COOLDOWN_DECLARE(chi_restore)
 	var/datum/action/chi_discipline/chi_ranged
+
+	//If we are currently leaning on something, and what that object is
+	var/atom/leaned_object

@@ -4,7 +4,10 @@
 	worn_icon = 'code/modules/wod13/worn.dmi'
 	onflooricon = 'code/modules/wod13/onfloor.dmi'
 	var/quieted = FALSE
-	cost = 25
+
+/obj/item/melee/vampirearms/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 25, "melee", FALSE)
 
 /obj/item
 	var/masquerade_violating = FALSE
@@ -86,17 +89,26 @@
 	pixel_w = -8
 	resistance_flags = FIRE_PROOF
 	masquerade_violating = FALSE
-	cost = 250
 	is_iron = TRUE
+
+/obj/item/melee/vampirearms/katana/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 250, "katana", FALSE)
 
 /obj/item/melee/vampirearms/katana/fire
 	name = "burning katana"
 	icon_state = "firetana"
 	pixel_w = -8
-	cost = 0
 	item_flags = DROPDEL
 	is_iron = FALSE
 	masquerade_violating = TRUE
+
+//Do not sell the magically summoned katanas for infinite cash
+/obj/item/melee/vampirearms/katana/fire/Initialize()
+	. = ..()
+	var/datum/component/selling/sell_component = GetComponent(/datum/component/selling)
+	if(sell_component)
+		sell_component.RemoveComponent()
 
 /obj/item/melee/vampirearms/katana/fire/afterattack(atom/target, mob/living/carbon/user, proximity)
 	. = ..()
@@ -108,10 +120,15 @@
 	name = "bloody katana"
 	color = "#bb0000"
 	pixel_w = -8
-	cost = 0
 	item_flags = DROPDEL
 	is_iron = FALSE
 	masquerade_violating = TRUE
+
+/obj/item/melee/vampirearms/katana/blood/Initialize()
+	. = ..()
+	var/datum/component/selling/sell_component = GetComponent(/datum/component/selling)
+	if(sell_component)
+		sell_component.RemoveComponent()
 
 /obj/item/melee/vampirearms/katana/blood/afterattack(atom/target, mob/living/carbon/user, proximity)
 	. = ..()
@@ -138,8 +155,11 @@
 	resistance_flags = FIRE_PROOF
 	masquerade_violating = FALSE
 	w_class = WEIGHT_CLASS_NORMAL
-	cost = 800
 	is_iron = TRUE
+
+/obj/item/melee/vampirearms/rapier/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 800, "rapier", FALSE)
 
 /obj/item/melee/vampirearms/machete
     name = "machete"
@@ -162,7 +182,10 @@
     pixel_w = -8
     resistance_flags = FIRE_PROOF
     masquerade_violating = FALSE
-    cost = 150
+
+/obj/item/melee/vampirearms/machete/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 150, "machete", FALSE)
 
 /obj/item/melee/vampirearms/sabre
 	name = "sabre"
@@ -184,7 +207,10 @@
 	resistance_flags = FIRE_PROOF
 	masquerade_violating = FALSE
 	is_iron = TRUE
-	cost = 1000
+
+/obj/item/melee/vampirearms/sabre/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 1000, "sabre", FALSE)
 
 /obj/item/melee/vampirearms/longsword
 	name = "longsword"
@@ -206,8 +232,10 @@
 	resistance_flags = FIRE_PROOF
 	masquerade_violating = FALSE
 	is_iron = TRUE
-	cost = 1800
 
+/obj/item/melee/vampirearms/longsword/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 1800, "longsword", FALSE)
 
 /obj/item/storage/belt/vampire/sheathe
 	name = "sheathe"
@@ -319,8 +347,11 @@
 	attack_verb_continuous = list("beats", "smacks")
 	attack_verb_simple = list("beat", "smack")
 	w_class = WEIGHT_CLASS_NORMAL
-	cost = 50
 	is_wood = TRUE
+
+/obj/item/melee/vampirearms/baseball/Initialize()
+	. = ..()
+	AddComponent(/datum/component/selling, 50, "baseball", FALSE)
 
 /obj/item/melee/vampirearms/baseball/attack(mob/living/target, mob/living/user)
 	. = ..()
@@ -429,25 +460,6 @@
 		L.apply_damage(16, CLONE)
 		L.apply_damage(7, BURN)
 
-/obj/item/melee/touch_attack/quietus
-	name = "\improper poison touch"
-	desc = "This is kind of like when you rub your feet on a shag rug so you can zap your friends, only a lot less safe."
-	icon = 'code/modules/wod13/weapons.dmi'
-	catchphrase = null
-	on_use_sound = 'sound/magic/disintegrate.ogg'
-	icon_state = "quietus"
-	inhand_icon_state = "mansus"
-
-/obj/item/melee/touch_attack/quietus/afterattack(atom/target, mob/living/carbon/user, proximity)
-	if(!proximity)
-		return
-	if(isliving(target))
-		var/mob/living/L = target
-		L.adjustFireLoss(10)
-		L.AdjustKnockdown(3 SECONDS)
-		L.adjustStaminaLoss(50)
-	return ..()
-
 /obj/item/melee/touch_attack/werewolf
 	name = "\improper falling touch"
 	desc = "This is kind of like when you rub your feet on a shag rug so you can zap your friends, only a lot less safe."
@@ -468,24 +480,6 @@
 		if(L.body_position != LYING_DOWN)
 			L.toggle_resting()
 	return ..()
-
-/obj/item/quietus_upgrade
-	name = "poison for weapons"
-	desc = "Upgrade your melee weapons with it."
-	icon_state = "quietus"
-	icon = 'code/modules/wod13/items.dmi'
-	w_class = WEIGHT_CLASS_SMALL
-	item_flags = DROPDEL
-
-/obj/item/melee/vampirearms/attackby(obj/item/I, mob/living/user, params)
-	. = ..()
-	if(istype(I, /obj/item/quietus_upgrade))
-		if(!quieted)
-			quieted = TRUE
-			armour_penetration = min(100, armour_penetration+30)
-			force += 20
-			color = "#72b27c"
-			qdel(I)
 
 /obj/item/melee/vampirearms/knife/gangrel/Initialize()
 	. = ..()
